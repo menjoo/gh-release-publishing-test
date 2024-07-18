@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Use notation like <x.y.z>, for instance 1.0.0'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: macos-14
+    steps:
+      - name: Checkout the repo 👷
+        uses: actions/checkout@v4
+
+      - name: Store buildnr
+        id: get_buildnr
+        run: |
+          echo BUILD_NR=`$(date +%s)` >> $GITHUB_OUTPUT
+
+      - name: Create content with version
+        run: |
+          echo ${{ inputs.tag }} > /Users/runner/work/_temp/Output/version-${{ steps.get_version_code.outputs.BUILD_NR }}.txt
+
+      - name: Push tag 🏷️
+        run: |
+          git tag -fa v${{ inputs.tag }} -m "Release v${{ inputs.tag }}"
+          git push origin -f v${{ inputs.tag }}
+
+      - name: Create GitHub release 📦➡️🗄️
+        uses: ncipollo/release-action@v1
+        with:
+          name: v${{ inputs.tag }}
+          tag: v${{ inputs.tag }}
+          draft: true
+          prerelease: true
+          allowUpdates: true
+          artifacts: "/Users/runner/work/_temp/Output/version-${{ steps.get_version_code.outputs.BUILD_NR }}.txt"
