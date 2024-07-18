@@ -38,7 +38,7 @@ jobs:
         with:
           name: v${{ inputs.tag }}
           tag: v${{ inputs.tag }}
-          draft: true
+          draft: false
           prerelease: true
           allowUpdates: true
           artifacts: "/Users/runner/work/_temp/Output/version-${{ steps.get_buildnr.outputs.BUILD_NR }}.txt"
