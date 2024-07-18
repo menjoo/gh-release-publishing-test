@@ -22,6 +22,8 @@ jobs:
 
       - name: Create content with version
         run: |
+          mkdir /Users/runner/work/_temp/Output
+          touch /Users/runner/work/_temp/Output/version-${{ steps.get_buildnr.outputs.BUILD_NR }}.txt
           echo ${{ inputs.tag }} > /Users/runner/work/_temp/Output/version-${{ steps.get_buildnr.outputs.BUILD_NR }}.txt
 
       - name: Push tag 🏷️
